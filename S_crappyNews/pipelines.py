@@ -7,7 +7,6 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
-
 import pymongo
 from ssl import CERT_NONE
 from hashlib import sha256
