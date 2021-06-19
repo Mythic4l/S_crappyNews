@@ -17,7 +17,6 @@ class MongoPipeline(object):
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
 
     @classmethod
     def from_crawler(cls, bbcspider):
@@ -27,8 +26,7 @@ class MongoPipeline(object):
         )
 
     def open_spider(self, spider):
-        self.client = pymongo.MongoClient(self.mongo_uri, ssl_cert_reqs=CERT_NONE)
-        self.db = self.client[self.mongo_db]
+        pass
 
     def close_spider(self, spider):
         self.client.close()
@@ -51,5 +49,5 @@ class MongoPipeline(object):
         if self.db.news.find(query).limit(1).count() > 0:
             raise DropItem("News exist")
 
-        self.db.news.insert_one(items)
+        self.collection.insert(dict(item))
         return item
