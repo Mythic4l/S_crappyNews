@@ -1,0 +1,3 @@
+mongo:
+  uri: "mongodb+srv://scrapper:D6hX2sMqcqPcGji@scrappynews.vn0jm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  db: "ScrappyNews"
