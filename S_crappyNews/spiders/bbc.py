@@ -1,5 +1,5 @@
 from scrapy.selector import Selector
-from bbcspider.items import BbcspiderItem
+from S_crappyNews.items import SpiderItems
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
@@ -13,7 +13,7 @@ class BbcSpider(CrawlSpider):
     )
 
     def parse_item(self, response):
-        item = BbcspiderItem()
+        item = SpiderItems()
         item["url"] = response.url
         item["title"] = Selector(response=response).xpath(
             self.__get_xpath_by_class("story-body__h1") + "/text()").extract()
