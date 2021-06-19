@@ -1,26 +1,30 @@
+from abc import ABC
+
 from scrapy.selector import Selector
-from S_crappyNews.items import SpiderItems
+from ..items import SpiderItems
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
 
-class BbcSpider(CrawlSpider):
-    name = "bbcspider"
-    allowed_domains = ["bbc.com"]
-    start_urls = ["http://www.bbc.com/news"]
+def parse_item(response):
+    item = SpiderItems()
+    news = response.css('div.gs-c-promo-heading')
+    for parson in news:
+
+        item["url"] = response.url
+        item["title"] = news.css('.gs-c-promo-heading__title::text').extract()
+        item["body"] = news.css('.gs-c-promo-heading__summary::text').extract()
+
+        yield item
+
+
+class BbcSpider(CrawlSpider, ABC):
+    name = "spider"
+    allowed_domains = ["bbc.co.uk"]
+    start_urls = ["http://www.bbc.co.uk/news"]
     rules = (
         Rule(LinkExtractor(allow=("",)), callback="parse_item"),
     )
-
-    def parse_item(self, response):
-        item = SpiderItems()
-        item["url"] = response.url
-        item["title"] = Selector(response=response).xpath(
-            self.__get_xpath_by_class("story-body__h1") + "/text()").extract()
-        item["body"] = " ".join(Selector(response=response).xpath(
-            self.__get_xpath_by_class("story-body__inner") + "//p/text()").extract()).strip("\n")
-
-        yield item
 
     @staticmethod
     def __get_xpath_by_class(classname):
